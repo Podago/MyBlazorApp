@@ -14,10 +14,14 @@ namespace MyBlazorApp.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Order>>> GetOrders()
+        public async Task<ActionResult<ServiceResponse<List<Order>>>> GetOrders()
         {
             var orders = await _context.Orders.ToListAsync();
-            return Ok(orders);
+            var response = new ServiceResponse<List<Order>>()
+            {
+                Data = orders
+            };
+            return Ok(response);
         }
     }
 }
