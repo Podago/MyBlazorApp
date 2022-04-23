@@ -1,0 +1,38 @@
+﻿@inject HttpClient Http
+
+<ul class="list-unstyled">
+    @foreach (var order in Orders)
+    {
+        <li class="media my-3">
+            <div class="media-img-wrapper mr-2">
+                <a href="#">
+                    <img class="media-img" src="@order.ImgUrl" alt="@order.Number" />
+                </a>
+            </div>
+            <div class="media-body">
+                <a href="#">
+                    <h4 class="mb-0">@order.Number</h4>
+                </a>
+                <p>@order.Note</p>
+                <h5 class="price">
+                    $@order.Price
+                </h5>
+            </div>
+        </li>
+    }
+</ul>
+
+@code {
+    private static List<Order> Orders { get; set; } = new List<Order>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Http.GetFromJsonAsync<List<Order>>("api/order");
+        var i = result;
+        if (result != null)
+        {
+            Orders = result;
+            return;
+        }
+    }
+}
