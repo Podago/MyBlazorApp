@@ -1,8 +1,8 @@
 global using MyBlazorApp.Shared;
 global using Microsoft.EntityFrameworkCore;
 global using MyBlazorApp.Server.Data;
+global using MyBlazorApp.Server.Services.OrderService;
 using Microsoft.AspNetCore.ResponseCompression;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +17,8 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 var app = builder.Build();
 

@@ -1,7 +1,13 @@
-﻿@inject HttpClient Http
+﻿@inject IOrderService OrderService
 
+@if(OrderService.Orders == null || OrderService.Orders.Count == 0)
+{
+    <span>Loading Orders...</span>
+}
+else
+{
 <ul class="list-unstyled">
-    @foreach (var order in Orders)
+    @foreach (var order in OrderService.Orders)
     {
         <li class="media my-3">
             <div class="media-img-wrapper mr-2">
@@ -21,16 +27,11 @@
         </li>
     }
 </ul>
+}
 
 @code {
-    private static List<Order> Orders { get; set; } = new List<Order>();
-
     protected override async Task OnInitializedAsync()
     {
-        var result = await Http.GetFromJsonAsync<ServiceResponse<List<Order>>>("api/order");
-        if (result != null && result.Data != null)
-        {
-            Orders = result.Data;
-        }
+        await OrderService.GetOrders();
     }
 }

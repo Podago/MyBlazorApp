@@ -6,22 +6,19 @@ namespace MyBlazorApp.Server.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly IOrderService _orderService;
 
-        public OrderController(DataContext context)
+        public OrderController(IOrderService orderService)
         {
-            _context = context;
+            _orderService = orderService;
         }
 
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<Order>>>> GetOrders()
         {
-            var orders = await _context.Orders.ToListAsync();
-            var response = new ServiceResponse<List<Order>>()
-            {
-                Data = orders
-            };
-            return Ok(response);
+            var result = await _orderService.GetOrdersAsync();
+
+            return Ok(result);
         }
     }
 }
