@@ -2,8 +2,12 @@
 {
     public interface IOrderService
     {
+        event Action OrdersChanged;
+
         List<Order> Orders { get; set; }
 
-        Task GetOrders();
+        Task GetOrders(string? orderStatusUrl = null);
+
+        Task<ServiceResponse<Order>> GetOrder(int orderId);
     }
 }

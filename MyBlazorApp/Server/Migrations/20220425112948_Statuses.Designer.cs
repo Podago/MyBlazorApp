@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyBlazorApp.Server.Data;
 
@@ -10,9 +11,10 @@ using MyBlazorApp.Server.Data;
 namespace MyBlazorApp.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220425112948_Statuses")]
+    partial class Statuses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,33 +79,6 @@ namespace MyBlazorApp.Server.Migrations
                             Number = "3",
                             Price = 29.99m,
                             StatusId = 2
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ImgUrl = "https://cmt.com.ru/images/zakazat.jpg",
-                            Note = "Заказ",
-                            Number = "4",
-                            Price = 29.99m,
-                            StatusId = 3
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ImgUrl = "https://umslon.ru/image/cache/catalog/stati/upakovka/kak-my-upakovyvaem-vashi-zakazy-1000x690.jpg",
-                            Note = "Еще один заказ",
-                            Number = "5",
-                            Price = 29.99m,
-                            StatusId = 1
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ImgUrl = "https://decorios.ru/upload/iblock/43c/43cc74ac7f933a74cbd9da71dc0b5ba5.jpg",
-                            Note = "Новый заказ",
-                            Number = "6",
-                            Price = 29.99m,
-                            StatusId = 1
                         });
                 });
 

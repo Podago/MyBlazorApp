@@ -2,6 +2,7 @@ global using MyBlazorApp.Shared;
 global using Microsoft.EntityFrameworkCore;
 global using MyBlazorApp.Server.Data;
 global using MyBlazorApp.Server.Services.OrderService;
+global using MyBlazorApp.Server.Services.OrderStatusService;
 using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IOrderStatuseService, OrderStatuseService>();
 
 var app = builder.Build();
 

@@ -25,11 +25,11 @@ namespace MyBlazorApp.Server.Migrations
 
             modelBuilder.Entity("MyBlazorApp.Shared.Order", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ImgUrl")
                         .HasColumnType("nvarchar(max)");
@@ -43,14 +43,14 @@ namespace MyBlazorApp.Server.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("Orders");
 
                     b.HasData(
                         new
                         {
-                            ID = 1,
+                            Id = 1,
                             ImgUrl = "https://envybox.io/blog/wp-content/uploads/2020/10/10.jpg",
                             Note = "Небольшой заказ",
                             Number = "1",
@@ -58,7 +58,7 @@ namespace MyBlazorApp.Server.Migrations
                         },
                         new
                         {
-                            ID = 2,
+                            Id = 2,
                             ImgUrl = "https://personalufa.ru/upload/iblock/dd1/dd18d2b8b4b413c1845ab8f3de679710.jpg",
                             Note = "Средний заказ",
                             Number = "2",
@@ -66,7 +66,7 @@ namespace MyBlazorApp.Server.Migrations
                         },
                         new
                         {
-                            ID = 3,
+                            Id = 3,
                             ImgUrl = "https://cdn.the-village.ru/the-village.ru/post_image-image/2XxOa2gwgzh8kEzt0esBtw-wide.jpg",
                             Note = "Большой заказ",
                             Number = "3",

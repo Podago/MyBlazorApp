@@ -1,4 +1,5 @@
 ﻿@inject IOrderService OrderService
+@implements IDisposable
 
 @if(OrderService.Orders == null || OrderService.Orders.Count == 0)
 {
@@ -11,12 +12,12 @@ else
     {
         <li class="media my-3">
             <div class="media-img-wrapper mr-2">
-                <a href="#">
+                <a href="/order/@order.Id">
                     <img class="media-img" src="@order.ImgUrl" alt="@order.Number" />
                 </a>
             </div>
             <div class="media-body">
-                <a href="#">
+                <a href="/order/@order.Id">
                     <h4 class="mb-0">@order.Number</h4>
                 </a>
                 <p>@order.Note</p>
@@ -30,8 +31,13 @@ else
 }
 
 @code {
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await OrderService.GetOrders();
+        OrderService.OrdersChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        OrderService.OrdersChanged -= StateHasChanged;
     }
 }

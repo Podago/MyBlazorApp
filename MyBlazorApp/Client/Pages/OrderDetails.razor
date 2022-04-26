@@ -1,0 +1,43 @@
+﻿@page "/order/{id:int}"
+@inject IOrderService OrderService
+
+@if (OrderService == null)
+{
+    <span>@message</span>
+}
+else
+{
+    <div class="media">
+        <div class="media-img-wrapper mr-2">
+            <img class="media-img" src="@order.ImgUrl" alt="@order.Number" />
+        </div>
+        <div class="media-body">
+            <h2 class="mb-0">@order.Number</h2>
+            <p>@order.Note</p>
+            <h4 class="price">@order.Price</h4>
+        </div>
+    </div>
+}
+
+@code {
+    public Order? order = null;
+    private string? message;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        message = "Loading Order...";
+
+        var result = await OrderService.GetOrder(Id);
+        if (!result.Success)
+        {
+            message = result.Message;
+        }
+        else
+        {
+            order = result.Data;
+        }
+    }
+}

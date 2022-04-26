@@ -1,5 +1,17 @@
 ﻿@page "/"
+@page "/{orderStatusUrl}"
+@inject IOrderService OrderService
 
 <PageTitle>All orders</PageTitle>
 
 <OrderList/>
+
+@code{
+    [Parameter]
+    public string? OrderStatusUrl { get; set; } = null;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await OrderService.GetOrders(OrderStatusUrl);
+    }
+}
