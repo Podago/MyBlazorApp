@@ -23,6 +23,7 @@ namespace MyBlazorApp.Server.Services.OrderService
             }
             else
             {
+                _context.Entry(order).Reference(o => o.Status).Load();
                 response.Data = order;
             }
             return response;
@@ -32,7 +33,7 @@ namespace MyBlazorApp.Server.Services.OrderService
         {
             var response = new ServiceResponse<List<Order>>
             {
-                Data = await _context.Orders.ToListAsync()
+                Data = await _context.Orders.Include(o => o.Status).ToListAsync()
             };
 
             return response;
@@ -42,8 +43,8 @@ namespace MyBlazorApp.Server.Services.OrderService
         {
             ServiceResponse<List<Order>> response = new ServiceResponse<List<Order>>();
 
-            var checkForCategory = _context.OrderStatuses.Select(s => s.Name.ToLower()).Contains(orderStatusUrl.ToLower());
-            if(checkForCategory == false)
+            var status = _context.OrderStatuses.FirstOrDefault(cat => cat.Name.ToLower() == orderStatusUrl.ToLower());
+            if (status == null)
             {
                 response.Success = false;
                 response.Message = "This category does not exist.";
@@ -51,8 +52,8 @@ namespace MyBlazorApp.Server.Services.OrderService
             }
 
             response.Data = await _context.Orders
-                                 .Where(o => o.Status.Url.ToLower() == orderStatusUrl.ToLower())
-                                 .ToListAsync();
+                                             .Where(o => o.Status == status)
+                                             .ToListAsync();
 
             return response;
         }
