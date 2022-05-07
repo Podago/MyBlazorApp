@@ -29,21 +29,35 @@ namespace MyBlazorApp.Server.Services.OrderService
             return response;
         }
 
-        public async Task<ServiceResponse<List<Order>>> GetOrdersAsync()
+        public async Task<ServiceResponse<List<Order>>> GetOrdersAsync(CancellationToken cancellationToken)
         {
-            var response = new ServiceResponse<List<Order>>
+            var q = _context.Orders.Count(o => o.Number.Contains("1"));
+            Console.WriteLine(q);
+            try
             {
-                Data = await _context.Orders.Include(o => o.Status).ToListAsync()
-            };
-
-            return response;
+                var response = new ServiceResponse<List<Order>>
+                {
+                    Data = await _context.Orders.Include(o => o.Status).ToListAsync(cancellationToken)
+                };
+                return response;
+            }
+            catch (OperationCanceledException e)
+            {
+                Console.WriteLine("Operation was cancelled by user.");
+                var response = new ServiceResponse<List<Order>>
+                {
+                    Success = false,
+                    StatusCode = HttpStatusCode.BadRequest
+                };
+                return response;
+            }
         }
 
         public async Task<ServiceResponse<List<Order>>> GetOrdersByStatusAsync(string orderStatusUrl)
         {
             ServiceResponse<List<Order>> response = new ServiceResponse<List<Order>>();
 
-            var status = _context.OrderStatuses.FirstOrDefault(cat => cat.Name.ToLower() == orderStatusUrl.ToLower());
+            var status = await _context.OrderStatuses.FirstOrDefaultAsync(status => status.Name.ToLower() == orderStatusUrl.ToLower());
             if (status == null)
             {
                 response.Success = false;
@@ -52,7 +66,7 @@ namespace MyBlazorApp.Server.Services.OrderService
             }
 
             response.Data = await _context.Orders
-                                             .Where(o => o.Status == status)
+                                             .Where(order => order.Status == status)
                                              .ToListAsync();
 
             return response;

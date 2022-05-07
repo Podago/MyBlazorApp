@@ -15,9 +15,9 @@ namespace MyBlazorApp.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<Order>>>> GetOrders()
+        public async Task<ActionResult<ServiceResponse<List<Order>>>> GetOrders(CancellationToken cancellationToken)
         {
-            var result = await _orderService.GetOrdersAsync();
+            var result = await _orderService.GetOrdersAsync(cancellationToken);
 
             return Ok(result);
         }
