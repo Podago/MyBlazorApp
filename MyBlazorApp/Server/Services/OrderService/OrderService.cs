@@ -31,8 +31,6 @@ namespace MyBlazorApp.Server.Services.OrderService
 
         public async Task<ServiceResponse<List<Order>>> GetOrdersAsync(CancellationToken cancellationToken)
         {
-            var q = _context.Orders.Count(o => o.Number.Contains("1"));
-            Console.WriteLine(q);
             try
             {
                 var response = new ServiceResponse<List<Order>>
@@ -66,8 +64,8 @@ namespace MyBlazorApp.Server.Services.OrderService
             }
 
             response.Data = await _context.Orders
-                                             .Where(order => order.Status == status)
-                                             .ToListAsync();
+                .Where(order => order.Status == status)
+                .ToListAsync();
 
             return response;
         }

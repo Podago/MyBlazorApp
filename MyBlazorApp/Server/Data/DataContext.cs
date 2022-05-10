@@ -4,6 +4,9 @@
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderStatus> OrderStatuses { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<OrderStatus>().HasData(
@@ -43,7 +46,7 @@
                         Number = "2",
                         Price = 19.99m,
                         Note = "Средний заказ",
-                        ImgUrl = "https://personalufa.ru/upload/iblock/dd1/dd18d2b8b4b413c1845ab8f3de679710.jpg",
+                        ImgUrl = "https://www.tstn.ru/local/client/icons/hw_cart.svg",
                         StatusId = 2
                     },
                     new Order
@@ -84,8 +87,5 @@
                     }
                 );
         }
-
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderStatus> OrderStatuses { get; set; }
     }
 }
