@@ -18,7 +18,7 @@ namespace MyBlazorApp.Shared
         [Required]
         [MaxLength(100)]
         public string? ImgUrl { get; set; }
-        public OrderStatus? Status { get; set; }
+        public OrderStatus Status { get; set; }
         public int StatusId { get; set; }
     }
 }

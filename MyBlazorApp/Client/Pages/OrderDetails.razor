@@ -21,7 +21,10 @@ else
 }
 
 @code {
-    public Order order = new Order();
+    private Order order = new Order
+    {
+        Status = new OrderStatus()
+    };
     private string? message;
 
     [Parameter]
@@ -32,13 +35,13 @@ else
         message = "Loading Order...";
 
         var result = await OrderService.GetOrder(Id);
-        if (!result.Success)
+        if (result.Success)
         {
-            message = result.Message;
+            order = result.Data;
         }
         else
         {
-            order = result.Data;
+            message = result.Message;
         }
     }
 }

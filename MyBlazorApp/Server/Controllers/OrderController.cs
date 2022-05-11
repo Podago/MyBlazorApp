@@ -23,31 +23,60 @@ namespace MyBlazorApp.Server.Controllers
         }
 
         [HttpGet("{orderId}")]
-        public async Task<ActionResult<ServiceResponse<Order>>> GetOrder(int orderId)
+        public async Task<ActionResult<ServiceResponse<Order>>> GetOrder(int orderId, CancellationToken cancellationToken)
         {
-            var result = await _orderService.GetOrderAsync(orderId);
+            var result = await _orderService.GetOrderAsync(orderId, cancellationToken);
 
             if (result.StatusCode == HttpStatusCode.OK)
             {
                 return Ok(result);
             }
+
             if (result.StatusCode == HttpStatusCode.NotFound)
             {
                 return NotFound(result);
             }
+
             return BadRequest(result);
         }
 
-        [HttpGet("orderStatus/{orderStatusUrl}")]
-        public async Task<ActionResult<ServiceResponse<List<Order>>>> GetOrderByStatus(string orderStatusUrl)
+        [HttpGet("ordersByStatus/{orderStatusUrl}/{page}")]
+        public async Task<ActionResult<ServiceResponse<OrderPage>>> GetOrdersByStatus(string orderStatusUrl, CancellationToken cancellationToken, int page = 1)
         {
-            var result = await _orderService.GetOrdersByStatusAsync(orderStatusUrl);
+            var result = await _orderService.GetOrdersByStatusAsync(orderStatusUrl, page, cancellationToken);
 
             if (result.StatusCode == HttpStatusCode.OK)
             {
                 return Ok(result);
             }
+
             return BadRequest(result);
+        }
+
+        [HttpGet("page/{page}")]
+        public async Task<ActionResult<ServiceResponse<List<Order>>>> GetOrdersByPage(CancellationToken cancellationToken, int page = 1)
+        {
+            var result = await _orderService.GetOrdersByPageAsync(page, cancellationToken);
+
+            if (result.StatusCode == HttpStatusCode.OK)
+            {
+                return Ok(result);
+            }
+
+            if (result.StatusCode == HttpStatusCode.NotFound)
+            {
+                return NotFound(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ServiceResponse<Order>>> AddOrder(Order order, CancellationToken cancellationToken)
+        {
+            var result = await _orderService.AddOrderAsync(order, cancellationToken);
+
+            return Ok(result);
         }
     }
 }

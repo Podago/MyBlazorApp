@@ -6,7 +6,15 @@
 
         List<Order> Orders { get; set; }
 
-        Task GetOrders(string? orderStatusUrl = null);
+        OrderPage OrdersOnPage { get; set; }
+
+        int CurrentPage { get; set; }
+
+        int TotalPages { get; set; }
+
+        string? OrderStatusUrl { get; set; }
+
+        Task GetOrders(int page, string? orderStatusUrl = null);
 
         Task<ServiceResponse<Order>> GetOrder(int orderId);
     }
