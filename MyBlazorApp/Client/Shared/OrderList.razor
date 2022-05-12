@@ -32,8 +32,7 @@ else
     for (int i = 1; i <= OrderService.TotalPages; i++)
     {
         <a class= "btn
-            page-selection
-            @(i == OrderService.CurrentPage ? "btn-info" : "btn-outline-info")"
+            @(i == OrderService.CurrentPage ? "page-selection-current" : "page-selection")"
             href = "/@(OrderService.OrderStatusUrl == null ? i : OrderService.OrderStatusUrl + "/" + i.ToString())">@i</a>
     }
 }

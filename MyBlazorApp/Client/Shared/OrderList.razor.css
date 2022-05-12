@@ -24,10 +24,26 @@
     text-align: center;
 }
 
-.page-selection{
+.page-selection-current {
     margin-right: 15px;
     margin-bottom: 30px;
+    border-width: 2px;
+    background-color: rgb(58, 6, 71, 0.30);
+    border-color: #3a0647b2;
+    color: #000000;
 }
+
+.page-selection {
+    margin-right: 15px;
+    margin-bottom: 30px;
+    border-width: 2px;
+    background-color: rgb(81, 10, 95, 0.05);
+    border-color: #3a0647b2;
+    color: #000000;
+}
+    .page-selection:focus {
+        box-shadow: 0 0 0 0.25rem rgb(11 172 204 / 50%);
+    }
 
 @media (max-width: 1023.98px) {
     .media {
