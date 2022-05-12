@@ -1,9 +1,9 @@
 ﻿@inject IOrderService OrderService
 @implements IDisposable
 
-@if(OrderService.Orders == null || OrderService.Orders.Count == 0)
+@if(!OrderService.Success)
 {
-    <span>Loading Orders...</span>
+    <span>@OrderService.Message</span>
 }
 else
 {

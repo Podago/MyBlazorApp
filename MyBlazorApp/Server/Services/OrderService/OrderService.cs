@@ -19,7 +19,7 @@ namespace MyBlazorApp.Server.Services.OrderService
             {
                 response.Success = false;
                 response.Message = "This order does not exist.";
-                response.StatusCode = HttpStatusCode.NotFound;
+                response.StatusCode = HttpStatusCode.NoContent;
             }
             else
             {
@@ -37,6 +37,13 @@ namespace MyBlazorApp.Server.Services.OrderService
             {
                 response.Data = await _context.Orders.AsNoTracking().Include(o => o.Status).ToListAsync(cancellationToken);
                 
+                if(response.Data.Count == 0)
+                {
+                    response.Message = "Orders do not exist.";
+                    response.StatusCode = HttpStatusCode.NoContent;
+                    response.Success = false;
+                }
+
                 return response;
             }
             catch (OperationCanceledException)
@@ -72,7 +79,9 @@ namespace MyBlazorApp.Server.Services.OrderService
             {
                 response.Success = false;
                 response.Message = "This category does not exist.";
-                response.StatusCode = HttpStatusCode.BadRequest;
+                response.StatusCode = HttpStatusCode.NoContent;
+
+                return response;
             }
 
             try
@@ -94,8 +103,8 @@ namespace MyBlazorApp.Server.Services.OrderService
                 if (orders.Count == 0)
                 {
                     response.Success = false;
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.Message = "This page can not be found.";
+                    response.StatusCode = HttpStatusCode.NoContent;
+                    response.Message = $"There is no orders in {status.Name} status page.";
 
                     return response;
                 }
@@ -149,7 +158,7 @@ namespace MyBlazorApp.Server.Services.OrderService
                 if (orders.Count == 0)
                 {
                     response.Success = false;
-                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.StatusCode = HttpStatusCode.NoContent;
                     response.Message = "This page can not be found.";
 
                     return response;

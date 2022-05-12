@@ -27,9 +27,9 @@ namespace MyBlazorApp.Server.Controllers
         {
             var result = await _orderService.GetOrderAsync(orderId, cancellationToken);
 
-            if (result.StatusCode == HttpStatusCode.OK)
+            if (result.StatusCode == HttpStatusCode.BadRequest)
             {
-                return Ok(result);
+                return BadRequest(result);
             }
 
             if (result.StatusCode == HttpStatusCode.NotFound)
@@ -37,7 +37,7 @@ namespace MyBlazorApp.Server.Controllers
                 return NotFound(result);
             }
 
-            return BadRequest(result);
+            return Ok(result);
         }
 
         [HttpGet("ordersByStatus/{orderStatusUrl}/{page}")]
@@ -45,12 +45,12 @@ namespace MyBlazorApp.Server.Controllers
         {
             var result = await _orderService.GetOrdersByStatusAsync(orderStatusUrl, page, cancellationToken);
 
-            if (result.StatusCode == HttpStatusCode.OK)
+            if (result.StatusCode == HttpStatusCode.BadRequest)
             {
-                return Ok(result);
+                return BadRequest(result);
             }
 
-            return BadRequest(result);
+            return Ok(result);
         }
 
         [HttpGet("page/{page}")]
@@ -58,9 +58,9 @@ namespace MyBlazorApp.Server.Controllers
         {
             var result = await _orderService.GetOrdersByPageAsync(page, cancellationToken);
 
-            if (result.StatusCode == HttpStatusCode.OK)
+            if (result.StatusCode == HttpStatusCode.BadRequest)
             {
-                return Ok(result);
+                return BadRequest(result);
             }
 
             if (result.StatusCode == HttpStatusCode.NotFound)
@@ -68,7 +68,7 @@ namespace MyBlazorApp.Server.Controllers
                 return NotFound(result);
             }
 
-            return BadRequest(result);
+            return Ok(result);
         }
 
         [HttpPost]

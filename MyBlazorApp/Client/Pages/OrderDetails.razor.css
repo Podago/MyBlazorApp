@@ -1,13 +1,13 @@
 ﻿.media-img{
-    max-height: 500px;
+    max-height: 300px;
     max-width: 500px;
     border-radius: 6px;
     margin: 0 10px 10px 10px;
 }
 
 .media-img-wrapper{
-    max-width: 600px;
-    max-height: 500px;
+    max-width: 500px;
+    max-height: 600px;
     text-align: center;
 }
 

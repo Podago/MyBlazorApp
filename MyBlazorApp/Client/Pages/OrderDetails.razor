@@ -1,7 +1,7 @@
 ﻿@page "/order/{id:int}"
 @inject IOrderService OrderService
 
-@if (OrderService == null)
+@if (!success)
 {
     <span>@message</span>
 }
@@ -26,6 +26,7 @@ else
         Status = new OrderStatus()
     };
     private string? message;
+    private bool success = false;
 
     [Parameter]
     public int Id { get; set; }
@@ -38,10 +39,12 @@ else
         if (result.Success)
         {
             order = result.Data;
+            success = result.Success;
         }
         else
         {
             message = result.Message;
+            StateHasChanged();
         }
     }
 }
