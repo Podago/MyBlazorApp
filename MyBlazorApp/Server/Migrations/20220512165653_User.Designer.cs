@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyBlazorApp.Server.Data;
 
@@ -11,9 +12,10 @@ using MyBlazorApp.Server.Data;
 namespace MyBlazorApp.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220512165653_User")]
+    partial class User
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,36 +159,6 @@ namespace MyBlazorApp.Server.Migrations
                         });
                 });
 
-            modelBuilder.Entity("MyBlazorApp.Shared.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "User"
-                        });
-                });
-
             modelBuilder.Entity("MyBlazorApp.Shared.User", b =>
                 {
                     b.Property<int>("Id")
@@ -202,48 +174,15 @@ namespace MyBlazorApp.Server.Migrations
 
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("varbinary(64)");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("varbinary(128)");
+                        .HasColumnType("varbinary(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Admin",
-                            PasswordHash = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                            PasswordSalt = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-                        });
-                });
-
-            modelBuilder.Entity("MyBlazorApp.Shared.UserRole", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("UserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            RoleId = 1
-                        });
                 });
 
             modelBuilder.Entity("MyBlazorApp.Shared.Order", b =>
@@ -255,35 +194,6 @@ namespace MyBlazorApp.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("MyBlazorApp.Shared.UserRole", b =>
-                {
-                    b.HasOne("MyBlazorApp.Shared.Role", "Role")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MyBlazorApp.Shared.User", "User")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("MyBlazorApp.Shared.Role", b =>
-                {
-                    b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("MyBlazorApp.Shared.User", b =>
-                {
-                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }
