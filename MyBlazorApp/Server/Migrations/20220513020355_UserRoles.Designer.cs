@@ -12,7 +12,7 @@ using MyBlazorApp.Server.Data;
 namespace MyBlazorApp.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220513015940_UserRoles")]
+    [Migration("20220513020355_UserRoles")]
     partial class UserRoles
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
