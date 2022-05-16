@@ -26,13 +26,15 @@ namespace MyBlazorApp.Server.Authentication
             }
         }
 
-        public static string CreateToken(User user, string key)
+        public static string CreateToken(User user, string key, List<string> roles = default)
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Role, "Admin")
+                new Claim(ClaimTypes.Name, user.Name)
             };
+            if (roles != null)
+                foreach (var role in roles)
+                    claims.Add(new Claim(ClaimTypes.Role, role));
 
             var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(key));
 
