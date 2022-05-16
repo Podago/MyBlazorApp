@@ -16,7 +16,7 @@ namespace MyBlazorApp.Server.Services.Authentication
 
         public async Task<ServiceResponse<bool>> CreateUser(UserDTO userDTO)
         {
-            if(_context.Users.Any(u=>u.Name ==userDTO.Name))
+            if (await _context.Users.AnyAsync(u => u.Name == userDTO.Name))
             {
                 return new ServiceResponse<bool>
                 {
@@ -34,7 +34,7 @@ namespace MyBlazorApp.Server.Services.Authentication
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
             };
-            _context.Users.Add(user);
+            await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
             return new ServiceResponse<bool>
@@ -71,6 +71,8 @@ namespace MyBlazorApp.Server.Services.Authentication
                     StatusCode = HttpStatusCode.NotFound
                 };
             }
+
+            var roles = await _context.UserRoles.Include(r => r.Role).Where(ur => ur.UserId == user.Id).Select(ur => ur.Role.Name).ToListAsync();
 
             var jwt = Auth.CreateToken(user, _configuration.GetSection("AppSettings:TokenKey").Value);
 
