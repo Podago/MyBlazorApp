@@ -36,8 +36,8 @@ namespace MyBlazorApp.Server.Services.OrderService
             try
             {
                 response.Data = await _context.Orders.AsNoTracking().Include(o => o.Status).ToListAsync(cancellationToken);
-                
-                if(response.Data.Count == 0)
+
+                if (response.Data.Count == 0)
                 {
                     response.Message = "Orders do not exist.";
                     response.StatusCode = HttpStatusCode.NoContent;
@@ -87,10 +87,10 @@ namespace MyBlazorApp.Server.Services.OrderService
             try
             {
                 var ordersOnPage = 2f;
-                var pageCount = Math.Ceiling(_context.Orders
+                var pageCount = Math.Ceiling(await _context.Orders
                                                 .AsNoTracking()
                                                 .Include(o => o.Status)
-                                                .Where(order => order.Status == status).Count() / ordersOnPage);
+                                                .Where(order => order.Status == status).CountAsync() / ordersOnPage);
 
                 var orders = await _context.Orders
                     .AsNoTracking()
@@ -146,7 +146,7 @@ namespace MyBlazorApp.Server.Services.OrderService
             try
             {
                 var ordersOnPage = 2f;
-                var pageCount = Math.Ceiling(_context.Orders.Count() / ordersOnPage);
+                var pageCount = Math.Ceiling(await _context.Orders.CountAsync() / ordersOnPage);
 
                 var orders = await _context.Orders
                     .AsNoTracking()
@@ -189,7 +189,7 @@ namespace MyBlazorApp.Server.Services.OrderService
         {
             ServiceResponse<Order> response = new ServiceResponse<Order>();
 
-            _context.Orders.Add(order);
+            await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
 
             response.Data = order;
