@@ -15,7 +15,7 @@ namespace MyBlazorApp.Server.Services.OrderService
 
         public async Task<Order> GetOrderAsync(int orderId, CancellationToken cancellationToken)
         {
-            var orders = await _context.Orders.FindAsync(orderId, cancellationToken);
+            var orders = await _context.Orders.Include(s => s.Status).FirstOrDefaultAsync(o => o.Id == orderId);
 
             return orders;
         }
