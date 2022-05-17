@@ -1,4 +1,6 @@
-﻿namespace MyBlazorApp.Shared
+﻿using MyBlazorApp.Shared.Models;
+
+namespace MyBlazorApp.Shared.DTO
 {
     public class OrderPage
     {

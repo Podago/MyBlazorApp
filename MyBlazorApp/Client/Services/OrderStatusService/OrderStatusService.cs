@@ -1,4 +1,6 @@
-﻿namespace MyBlazorApp.Client.Services.OrderStatusService
+﻿using MyBlazorApp.Shared.Models;
+
+namespace MyBlazorApp.Client.Services.OrderStatusService
 {
     public class OrderStatusService : IOrderStatusService
     {

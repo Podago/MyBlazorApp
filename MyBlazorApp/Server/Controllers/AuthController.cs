@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyBlazorApp.Server.Services.Authentication;
+using MyBlazorApp.Shared.DTO;
 using System.Net;
 
 namespace MyBlazorApp.Server.Controllers
@@ -18,26 +19,28 @@ namespace MyBlazorApp.Server.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<ServiceResponse<UserDTO>>> Register(UserDTO userDTO)
         {
-            var response = await _authentication.CreateUser(userDTO);
+            var result = await _authentication.CreateUser(userDTO);
 
-            if (response.StatusCode == HttpStatusCode.Created)
-                return Ok(response);
+            if (result.success == false)
+                return BadRequest(result.message);
 
-            if (response.StatusCode == HttpStatusCode.UnprocessableEntity)
-                return UnprocessableEntity(response);
-
-            return BadRequest(response);
+            return Created("api/Auth/login", result.message);
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<ServiceResponse<UserDTO>>> Login(UserDTO userDTO)
         {
-            var response = await _authentication.Login(userDTO);
+            var jwt = await _authentication.Login(userDTO);
 
-            if (response.StatusCode == HttpStatusCode.OK)
-                return Ok(response);
+            if (jwt == null)
+                return Unauthorized();
 
-            return BadRequest(response);
+            var result = new ServiceResponse<string>
+            {
+                Data = jwt
+            };
+
+            return Ok(result);
         }
     }
 }

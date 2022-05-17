@@ -1,4 +1,4 @@
-﻿namespace MyBlazorApp.Shared
+﻿namespace MyBlazorApp.Shared.DTO
 {
     public class UserDTO
     {

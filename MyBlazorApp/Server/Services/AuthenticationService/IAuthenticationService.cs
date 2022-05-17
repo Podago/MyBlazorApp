@@ -1,8 +1,10 @@
-﻿namespace MyBlazorApp.Server.Services.Authentication
+﻿using MyBlazorApp.Shared.DTO;
+
+namespace MyBlazorApp.Server.Services.Authentication
 {
     public interface IAuthenticationService
     {
-        Task<ServiceResponse<bool>> CreateUser(UserDTO userDTO);
-        Task<ServiceResponse<string>> Login(UserDTO userDTO);
+        Task<(bool success, string message)> CreateUser(UserDTO userDTO);
+        Task<string> Login(UserDTO userDTO);
     }
 }

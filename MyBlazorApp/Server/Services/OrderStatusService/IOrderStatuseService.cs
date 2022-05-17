@@ -1,8 +1,10 @@
-﻿namespace MyBlazorApp.Server.Services.OrderStatusService
+﻿using MyBlazorApp.Shared.Models;
+
+namespace MyBlazorApp.Server.Services.OrderStatusService
 {
     public interface IOrderStatuseService
     {
-        Task<ServiceResponse<List<OrderStatus>>> GetOrderStatusesAsync();
-        Task<ServiceResponse<OrderStatus>> GetOrderStatuseAsync(int statusId);
+        Task<List<OrderStatus>> GetOrderStatusesAsync();
+        Task<OrderStatus> GetOrderStatuseAsync(int statusId);
     }
 }
