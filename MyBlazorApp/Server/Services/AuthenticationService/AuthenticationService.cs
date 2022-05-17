@@ -1,4 +1,6 @@
 ﻿using MyBlazorApp.Server.Authentication;
+using MyBlazorApp.Shared.DTO;
+using MyBlazorApp.Shared.Models;
 using System.Net;
 
 namespace MyBlazorApp.Server.Services.Authentication
@@ -14,17 +16,11 @@ namespace MyBlazorApp.Server.Services.Authentication
             _configuration = configuration;
         }
 
-        public async Task<ServiceResponse<bool>> CreateUser(UserDTO userDTO)
+        public async Task<(bool success, string message)> CreateUser(UserDTO userDTO)
         {
-            if (await _context.Users.AnyAsync(u => u.Name == userDTO.Name))
+            if (await _context.Users.AsNoTracking().AnyAsync(u => u.Name == userDTO.Name))
             {
-                return new ServiceResponse<bool>
-                {
-                    Data = false,
-                    Success = false,
-                    Message = "User already exists.",
-                    StatusCode = HttpStatusCode.UnprocessableEntity
-                };
+                return (false, "User already exists.");
             }
             Auth.CreatePasswordHash(userDTO.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
@@ -37,50 +33,27 @@ namespace MyBlazorApp.Server.Services.Authentication
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
-            return new ServiceResponse<bool>
-            {
-                Data = true,
-                Message = "User created.",
-                StatusCode = HttpStatusCode.Created
-            };
+            return (true, "User created.");
         }
 
-        public async Task<ServiceResponse<string>> Login(UserDTO userDTO)
+        public async Task<string> Login(UserDTO userDTO)
         {
-            string incorrectLogin = "User or password are incorrect.";
-
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == userDTO.Name);
+            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Name == userDTO.Name);
             if (user == null)
             {
-                return new ServiceResponse<string>
-                {
-                    Data = string.Empty,
-                    Success = false,
-                    Message = incorrectLogin,
-                    StatusCode = HttpStatusCode.NotFound
-                };
+                return null;
             }
 
             if (!Auth.CheckPassword(userDTO.Password, user.PasswordHash, user.PasswordSalt))
             {
-                return new ServiceResponse<string>
-                {
-                    Data = string.Empty,
-                    Success = false,
-                    Message = incorrectLogin,
-                    StatusCode = HttpStatusCode.NotFound
-                };
+                return null;
             }
 
-            var roles = await _context.UserRoles.Include(r => r.Role).Where(ur => ur.UserId == user.Id).Select(ur => ur.Role.Name).ToListAsync();
+            var roles = await _context.UserRoles.AsNoTracking().Include(r => r.Role).Where(ur => ur.UserId == user.Id).Select(ur => ur.Role.Name).ToListAsync();
 
-            var jwt = Auth.CreateToken(user, _configuration.GetSection("AppSettings:TokenKey").Value);
+            var jwt = Auth.CreateToken(user, _configuration.GetSection("AppSettings:TokenKey").Value, roles);
 
-            return new ServiceResponse<string>
-            {
-                Data = jwt,
-                StatusCode = HttpStatusCode.OK
-            };
+            return jwt;
         }
     }
 }

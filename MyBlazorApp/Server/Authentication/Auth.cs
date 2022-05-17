@@ -1,11 +1,12 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using MyBlazorApp.Shared.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
 namespace MyBlazorApp.Server.Authentication
 {
-    public static class Auth
+    public class Auth
     {
         public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
@@ -26,7 +27,7 @@ namespace MyBlazorApp.Server.Authentication
             }
         }
 
-        public static string CreateToken(User user, string key, List<string> roles = default)
+        public static string CreateToken(User user, string key, List<string>? roles = default)
         {
             List<Claim> claims = new List<Claim>
             {

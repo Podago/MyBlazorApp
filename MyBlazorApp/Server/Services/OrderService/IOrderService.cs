@@ -1,11 +1,14 @@
-﻿namespace MyBlazorApp.Server.Services.OrderService
+﻿using MyBlazorApp.Shared.DTO;
+using MyBlazorApp.Shared.Models;
+
+namespace MyBlazorApp.Server.Services.OrderService
 {
     public interface IOrderService
     {
-        Task<ServiceResponse<List<Order>>> GetOrdersAsync(CancellationToken cancellationToken);
-        Task<ServiceResponse<Order>> GetOrderAsync(int orderId, CancellationToken cancellationToken);
-        Task<ServiceResponse<OrderPage>> GetOrdersByStatusAsync(string orderStatusUrl, int page, CancellationToken cancellationToken);
-        Task<ServiceResponse<OrderPage>> GetOrdersByPageAsync(int page, CancellationToken cancellationToken);
-        Task<ServiceResponse<Order>> AddOrderAsync(Order order, CancellationToken cancellationToken);
+        Task<List<Order>> GetOrdersAsync(CancellationToken cancellationToken);
+        Task<Order> GetOrderAsync(int orderId, CancellationToken cancellationToken);
+        Task<OrderPage> GetOrdersByStatusPageAsync(string orderStatusUrl, int page, CancellationToken cancellationToken);
+        Task<OrderPage> GetOrdersByPageAsync(int page, CancellationToken cancellationToken);
+        Task<int> AddOrderAsync(Order order, CancellationToken cancellationToken);
     }
 }

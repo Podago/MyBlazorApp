@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Net;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MyBlazorApp.Shared.DTO;
+using MyBlazorApp.Shared.Models;
 
 namespace MyBlazorApp.Server.Controllers
 {
@@ -17,66 +19,130 @@ namespace MyBlazorApp.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<Order>>>> GetOrders(CancellationToken cancellationToken)
         {
-            var result = await _orderService.GetOrdersAsync(cancellationToken);
+            try
+            {
+                var orders = await _orderService.GetOrdersAsync(cancellationToken);
 
-            return Ok(result);
+                if(orders == null)
+                {
+                    return NotFound();
+                }
+
+                var result = new ServiceResponse<List<Order>>
+                {
+                    Data = orders
+                };
+
+                return Ok(result);
+            }
+            catch (OperationCanceledException)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("{orderId}")]
         public async Task<ActionResult<ServiceResponse<Order>>> GetOrder(int orderId, CancellationToken cancellationToken)
         {
-            var result = await _orderService.GetOrderAsync(orderId, cancellationToken);
-
-            if (result.StatusCode == HttpStatusCode.BadRequest)
+            try
             {
-                return BadRequest(result);
-            }
+                var order = await _orderService.GetOrderAsync(orderId, cancellationToken);
 
-            if (result.StatusCode == HttpStatusCode.NotFound)
+                if (order == null)
+                {
+                    return NotFound();
+                }
+
+                var result = new ServiceResponse<Order>
+                {
+                    Data = order
+                };
+
+                return Ok(result);
+            }
+            catch (OperationCanceledException)
             {
-                return NotFound(result);
+                return BadRequest();
             }
-
-            return Ok(result);
         }
 
         [HttpGet("ordersByStatus/{orderStatusUrl}/{page}")]
         public async Task<ActionResult<ServiceResponse<OrderPage>>> GetOrdersByStatus(string orderStatusUrl, CancellationToken cancellationToken, int page = 1)
         {
-            var result = await _orderService.GetOrdersByStatusAsync(orderStatusUrl, page, cancellationToken);
-
-            if (result.StatusCode == HttpStatusCode.BadRequest)
+            try
             {
-                return BadRequest(result);
-            }
+                var orderPage = await _orderService.GetOrdersByStatusPageAsync(orderStatusUrl, page, cancellationToken);
 
-            return Ok(result);
+                if (orderPage == null)
+                {
+                    return NotFound();
+                }
+
+                var result = new ServiceResponse<OrderPage>
+                {
+                    Data = orderPage
+                };
+
+                return Ok(result);
+            }
+            catch (OperationCanceledException)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("page/{page}")]
-        public async Task<ActionResult<ServiceResponse<List<Order>>>> GetOrdersByPage(CancellationToken cancellationToken, int page = 1)
+        public async Task<ActionResult<ServiceResponse<OrderPage>>> GetOrdersByPage(CancellationToken cancellationToken, int page = 1)
         {
-            var result = await _orderService.GetOrdersByPageAsync(page, cancellationToken);
-
-            if (result.StatusCode == HttpStatusCode.BadRequest)
+            try
             {
-                return BadRequest(result);
+                var orderPage = await _orderService.GetOrdersByPageAsync(page, cancellationToken);
+
+                if (orderPage == null)
+                {
+                    return NotFound();
+                }
+
+                var result = new ServiceResponse<OrderPage>
+                {
+                    Data = orderPage
+                };
+
+                return Ok(result);
+            }
+            catch (OperationCanceledException)
+            {
+                return BadRequest();
             }
 
-            if (result.StatusCode == HttpStatusCode.NotFound)
-            {
-                return NotFound(result);
-            }
-
-            return Ok(result);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<Order>>> AddOrder(Order order, CancellationToken cancellationToken)
+        [Authorize]
+        public async Task<ActionResult<ServiceResponse<int>>> AddOrder(Order order, CancellationToken cancellationToken)
         {
-            var result = await _orderService.AddOrderAsync(order, cancellationToken);
+            try
+            {
+                var newOrderId = await _orderService.AddOrderAsync(order, cancellationToken);
 
-            return Ok(result);
+                if (newOrderId == null)
+                {
+                    return BadRequest();
+                }
+
+                var result = new ServiceResponse<int>
+                {
+                    Data = newOrderId,
+                    Message = "Order was created."
+
+                };
+
+                return Created($"api/Order/{newOrderId}", result);
+            }
+            catch (OperationCanceledException)
+            {
+                return BadRequest();
+            }
         }
     }
 }

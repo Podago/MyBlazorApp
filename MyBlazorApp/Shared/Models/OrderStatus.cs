@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyBlazorApp.Shared
+namespace MyBlazorApp.Shared.Models
 {
     public class OrderStatus
     {

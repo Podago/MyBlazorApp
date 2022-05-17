@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyBlazorApp.Shared.Models;
 
 namespace MyBlazorApp.Server.Controllers
 {
@@ -16,20 +17,35 @@ namespace MyBlazorApp.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<OrderStatus>>>> GetOrderStatuses()
         {
-            var result = await _orderStatuseService.GetOrderStatusesAsync();
+            var statuses = await _orderStatuseService.GetOrderStatusesAsync();
+
+            if(statuses == null)
+            {
+                return NotFound();
+            }
+
+            var result = new ServiceResponse<List<OrderStatus>>
+            {
+                Data = statuses
+            };
 
             return Ok(result);
         }
 
         [HttpGet("{orderStatusId}")]
-        public async Task<ActionResult<ServiceResponse<List<OrderStatus>>>> GetOrderStatuse(int orderStatusId)
+        public async Task<ActionResult<ServiceResponse<OrderStatus>>> GetOrderStatus(int orderStatusId)
         {
-            var result = await _orderStatuseService.GetOrderStatuseAsync(orderStatusId);
+            var status = await _orderStatuseService.GetOrderStatuseAsync(orderStatusId);
 
-            if (result.Data == null)
+            if (status == null)
             {
-                return NotFound(result);
+                return NotFound();
             }
+
+            var result = new ServiceResponse<OrderStatus>
+            {
+                Data = status
+            };
 
             return Ok(result);
         }

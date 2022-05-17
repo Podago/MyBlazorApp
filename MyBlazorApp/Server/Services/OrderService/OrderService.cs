@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using MyBlazorApp.Shared.DTO;
+using MyBlazorApp.Shared.Models;
+using System.Net;
 
 namespace MyBlazorApp.Server.Services.OrderService
 {
@@ -11,190 +13,107 @@ namespace MyBlazorApp.Server.Services.OrderService
             _context = context;
         }
 
-        public async Task<ServiceResponse<Order>> GetOrderAsync(int orderId, CancellationToken cancellationToken)
+        public async Task<Order> GetOrderAsync(int orderId, CancellationToken cancellationToken)
         {
-            var response = new ServiceResponse<Order>();
-            var order = await _context.Orders.FindAsync(orderId);
-            if (order == null)
-            {
-                response.Success = false;
-                response.Message = "This order does not exist.";
-                response.StatusCode = HttpStatusCode.NoContent;
-            }
-            else
-            {
-                _context.Entry(order).Reference(o => o.Status).Load();
-                response.Data = order;
-            }
-            return response;
+            var orders = await _context.Orders.FindAsync(orderId, cancellationToken);
+
+            return orders;
         }
 
-        public async Task<ServiceResponse<List<Order>>> GetOrdersAsync(CancellationToken cancellationToken)
+        public async Task<List<Order>> GetOrdersAsync(CancellationToken cancellationToken)
         {
-            var response = new ServiceResponse<List<Order>>();
 
-            try
-            {
-                response.Data = await _context.Orders.AsNoTracking().Include(o => o.Status).ToListAsync(cancellationToken);
+            var orders = await _context.Orders.AsNoTracking().Include(o => o.Status).ToListAsync(cancellationToken);
 
-                if (response.Data.Count == 0)
-                {
-                    response.Message = "Orders do not exist.";
-                    response.StatusCode = HttpStatusCode.NoContent;
-                    response.Success = false;
-                }
+            return orders;
 
-                return response;
-            }
-            catch (OperationCanceledException)
-            {
-                Console.WriteLine("Operation was cancelled by user.");
-
-                response.Success = false;
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Message = "Operation was cancelled by user.";
-
-                return response;
-            }
         }
 
-        public async Task<ServiceResponse<OrderPage>> GetOrdersByStatusAsync(string orderStatusUrl, int page, CancellationToken cancellationToken)
+        public async Task<OrderPage> GetOrdersByStatusPageAsync(string orderStatusUrl, int page, CancellationToken cancellationToken)
         {
-            ServiceResponse<OrderPage> response = new ServiceResponse<OrderPage>();
-
             var status = await _context.OrderStatuses
                 .AsNoTracking()
-                .FirstOrDefaultAsync(status => status.Name.ToLower() == orderStatusUrl.ToLower());
+                .FirstOrDefaultAsync(status => status.Name.ToLower() == orderStatusUrl.ToLower(), cancellationToken);
 
             if (page == 0)
             {
-                response.Success = false;
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Message = "This page does not exist.";
-
-                return response;
+                return null;
             }
 
             if (status == null)
             {
-                response.Success = false;
-                response.Message = "This category does not exist.";
-                response.StatusCode = HttpStatusCode.NoContent;
-
-                return response;
+                return null;
             }
 
-            try
-            {
-                var ordersOnPage = 2f;
-                var pageCount = Math.Ceiling(await _context.Orders
+            var ordersOnPage = 2f;
+            var pageCount = Math.Ceiling(await _context.Orders
                                                 .AsNoTracking()
                                                 .Include(o => o.Status)
-                                                .Where(order => order.Status == status).CountAsync() / ordersOnPage);
+                                                .Where(order => order.Status == status).CountAsync(cancellationToken) / ordersOnPage);
 
-                var orders = await _context.Orders
-                    .AsNoTracking()
-                    .Include(o => o.Status)
-                    .Where(order => order.Status == status)
-                    .Skip((page - 1) * (int)ordersOnPage)
-                    .Take((int)ordersOnPage)
-                    .ToListAsync(cancellationToken);
+            var orders = await _context.Orders
+                .AsNoTracking()
+                .Include(o => o.Status)
+                .Where(order => order.Status == status)
+                .Skip((page - 1) * (int)ordersOnPage)
+                .Take((int)ordersOnPage)
+                .ToListAsync(cancellationToken);
 
-                if (orders.Count == 0)
-                {
-                    response.Success = false;
-                    response.StatusCode = HttpStatusCode.NoContent;
-                    response.Message = $"There is no orders in {status.Name} status page.";
-
-                    return response;
-                }
-
-                response.Data = new OrderPage
-                {
-                    Orders = orders,
-                    CurrentPage = page,
-                    TotalPages = (int)pageCount
-                };
-
-                return response;
-            }
-            catch (OperationCanceledException)
+            if (orders.Count == 0)
             {
-                Console.WriteLine("Operation was cancelled by user.");
-
-                response.Success = false;
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Message = "Operation was cancelled by user.";
-
-                return response;
+                return null;
             }
+
+            var orderPage = new OrderPage
+            {
+                Orders = orders,
+                CurrentPage = page,
+                TotalPages = (int)pageCount
+            };
+
+            return orderPage;
         }
 
-        public async Task<ServiceResponse<OrderPage>> GetOrdersByPageAsync(int page, CancellationToken cancellationToken)
+        public async Task<OrderPage> GetOrdersByPageAsync(int page, CancellationToken cancellationToken)
         {
-            ServiceResponse<OrderPage> response = new ServiceResponse<OrderPage>();
-
             if (page == 0)
             {
-                response.Success = false;
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Message = "This page does not exist.";
-
-                return response;
+                return null;
             }
 
-            try
+            var ordersOnPage = 2f;
+            var pageCount = Math.Ceiling(await _context.Orders.AsNoTracking().CountAsync(cancellationToken) / ordersOnPage);
+
+            var orders = await _context.Orders
+                .AsNoTracking()
+                .Include(o => o.Status)
+                .Skip((page - 1) * (int)ordersOnPage)
+                .Take((int)ordersOnPage)
+                .ToListAsync(cancellationToken);
+
+            if (orders.Count == 0)
             {
-                var ordersOnPage = 2f;
-                var pageCount = Math.Ceiling(await _context.Orders.CountAsync() / ordersOnPage);
-
-                var orders = await _context.Orders
-                    .AsNoTracking()
-                    .Include(o => o.Status)
-                    .Skip((page - 1) * (int)ordersOnPage)
-                    .Take((int)ordersOnPage)
-                    .ToListAsync(cancellationToken);
-
-                if (orders.Count == 0)
-                {
-                    response.Success = false;
-                    response.StatusCode = HttpStatusCode.NoContent;
-                    response.Message = "This page can not be found.";
-
-                    return response;
-                }
-
-                response.Data = new OrderPage
-                {
-                    Orders = orders,
-                    CurrentPage = page,
-                    TotalPages = (int)pageCount
-                };
-
-                return response;
+                return null;
             }
-            catch (OperationCanceledException)
+
+            var orderPage = new OrderPage
             {
-                Console.WriteLine("Operation was cancelled by user.");
+                Orders = orders,
+                CurrentPage = page,
+                TotalPages = (int)pageCount
+            };
 
-                response.Success = false;
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Message = "Operation was cancelled by user.";
-
-                return response;
-            }
+            return orderPage;
         }
 
-        public async Task<ServiceResponse<Order>> AddOrderAsync(Order order, CancellationToken cancellationToken)
+        public async Task<int> AddOrderAsync(Order order, CancellationToken cancellationToken)
         {
             ServiceResponse<Order> response = new ServiceResponse<Order>();
 
-            await _context.Orders.AddAsync(order);
-            await _context.SaveChangesAsync();
+            await _context.Orders.AddAsync(order, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
 
-            response.Data = order;
-
-            return response;
+            return order.Id;
         }
     }
 }

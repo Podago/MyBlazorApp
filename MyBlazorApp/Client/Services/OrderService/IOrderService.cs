@@ -1,4 +1,6 @@
-﻿namespace MyBlazorApp.Client.Services.OrderService
+﻿using MyBlazorApp.Shared.Models;
+
+namespace MyBlazorApp.Client.Services.OrderService
 {
     public interface IOrderService
     {
