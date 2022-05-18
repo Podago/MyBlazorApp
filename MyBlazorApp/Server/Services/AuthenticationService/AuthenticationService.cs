@@ -1,4 +1,4 @@
-﻿using MyBlazorApp.Server.Authentication;
+﻿using AuthenticationLibriary.Authentication;
 
 namespace MyBlazorApp.Server.Services.Authentication
 {
@@ -19,8 +19,8 @@ namespace MyBlazorApp.Server.Services.Authentication
             {
                 return (false, "User already exists.");
             }
-            Auth.CreatePasswordHash(userDTO.Password, out byte[] passwordHash, out byte[] passwordSalt);
-
+            AuthenticationLibriary.Authentication.Authentication.CreatePasswordHash(userDTO.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            
             var user = new User
             {
                 Name = userDTO.Name,
@@ -41,14 +41,14 @@ namespace MyBlazorApp.Server.Services.Authentication
                 return null;
             }
 
-            if (!Auth.CheckPassword(userDTO.Password, user.PasswordHash, user.PasswordSalt))
+            if (!AuthenticationLibriary.Authentication.Authentication.CheckPassword(userDTO.Password, user.PasswordHash, user.PasswordSalt))
             {
                 return null;
             }
 
             var roles = await _context.UserRoles.AsNoTracking().Include(r => r.Role).Where(ur => ur.UserId == user.Id).Select(ur => ur.Role.Name).ToListAsync();
 
-            var jwt = Auth.CreateToken(user, _configuration.GetSection("AppSettings:TokenKey").Value, roles);
+            var jwt = AuthenticationLibriary.Authentication.Authentication.CreateToken(user.Name, _configuration.GetSection("AppSettings:TokenKey").Value, roles);
 
             return jwt;
         }

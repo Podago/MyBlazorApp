@@ -3,13 +3,13 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
-namespace MyBlazorApp.Server.Authentication
+namespace AuthenticationLibriary.Authentication
 {
-    public class Auth
+    public class Authentication
     {
         public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            using(var hmac = new HMACSHA512())
+            using (var hmac = new HMACSHA512())
             {
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
@@ -26,11 +26,11 @@ namespace MyBlazorApp.Server.Authentication
             }
         }
 
-        public static string CreateToken(User user, string key, List<string>? roles = default)
+        public static string CreateToken(string userName, string key, List<string>? roles = default)
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Name)
+                new Claim(ClaimTypes.Name, userName)
             };
             if (roles != null)
                 foreach (var role in roles)
