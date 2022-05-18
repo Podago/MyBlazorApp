@@ -1,7 +1,4 @@
-﻿using MyBlazorApp.Shared.DTO;
-using MyBlazorApp.Shared.Models;
-
-namespace MyBlazorApp.Server.Services.OrderService
+﻿namespace MyBlazorApp.Server.Services.OrderService
 {
     public interface IOrderService
     {

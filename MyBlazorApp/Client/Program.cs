@@ -1,7 +1,3 @@
-global using MyBlazorApp.Shared;
-global using System.Net.Http.Json;
-global using MyBlazorApp.Client.Services.OrderService;
-global using MyBlazorApp.Client.Services.OrderStatusService;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MyBlazorApp.Client;

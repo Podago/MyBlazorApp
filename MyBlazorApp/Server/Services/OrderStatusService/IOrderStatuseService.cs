@@ -1,6 +1,4 @@
-﻿using MyBlazorApp.Shared.Models;
-
-namespace MyBlazorApp.Server.Services.OrderStatusService
+﻿namespace MyBlazorApp.Server.Services.OrderStatusService
 {
     public interface IOrderStatuseService
     {

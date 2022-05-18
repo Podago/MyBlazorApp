@@ -1,7 +1,4 @@
 ﻿using MyBlazorApp.Server.Authentication;
-using MyBlazorApp.Shared.DTO;
-using MyBlazorApp.Shared.Models;
-using System.Net;
 
 namespace MyBlazorApp.Server.Services.Authentication
 {

@@ -1,0 +1,10 @@
+﻿global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.EntityFrameworkCore;
+global using MyBlazorApp.Server.Data;
+global using MyBlazorApp.Server.Services.Authentication;
+global using MyBlazorApp.Server.Services.OrderService;
+global using MyBlazorApp.Server.Services.OrderStatusService;
+global using MyBlazorApp.Shared;
+global using MyBlazorApp.Shared.DTO;
+global using MyBlazorApp.Shared.Models;
+global using Microsoft.AspNetCore.Authorization;

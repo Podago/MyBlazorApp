@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MyBlazorApp.Server.Services.Authentication;
-using MyBlazorApp.Shared.DTO;
-using System.Net;
-
-namespace MyBlazorApp.Server.Controllers
+﻿namespace MyBlazorApp.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -19,12 +14,12 @@ namespace MyBlazorApp.Server.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<ServiceResponse<UserDTO>>> Register(UserDTO userDTO)
         {
-            var result = await _authentication.CreateUser(userDTO);
+            var (success, message) = await _authentication.CreateUser(userDTO);
 
-            if (result.success == false)
-                return BadRequest(result.message);
+            if (success == false)
+                return BadRequest(message);
 
-            return Created("api/Auth/login", result.message);
+            return Created("api/Auth/login", message);
         }
 
         [HttpPost("login")]

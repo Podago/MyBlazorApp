@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MyBlazorApp.Shared.Models;
-
-namespace MyBlazorApp.Server.Controllers
+﻿namespace MyBlazorApp.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

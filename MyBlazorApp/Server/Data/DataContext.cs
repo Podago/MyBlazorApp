@@ -1,6 +1,4 @@
-﻿using MyBlazorApp.Shared.Models;
-
-namespace MyBlazorApp.Server.Data
+﻿namespace MyBlazorApp.Server.Data
 {
     public class DataContext : DbContext
     {

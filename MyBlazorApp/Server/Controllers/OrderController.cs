@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using MyBlazorApp.Shared.DTO;
-using MyBlazorApp.Shared.Models;
-
-namespace MyBlazorApp.Server.Controllers
+﻿namespace MyBlazorApp.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

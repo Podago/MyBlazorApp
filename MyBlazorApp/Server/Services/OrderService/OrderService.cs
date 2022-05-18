@@ -1,8 +1,4 @@
-﻿using MyBlazorApp.Shared.DTO;
-using MyBlazorApp.Shared.Models;
-using System.Net;
-
-namespace MyBlazorApp.Server.Services.OrderService
+﻿namespace MyBlazorApp.Server.Services.OrderService
 {
     public class OrderService : IOrderService
     {
@@ -108,8 +104,6 @@ namespace MyBlazorApp.Server.Services.OrderService
 
         public async Task<int> AddOrderAsync(Order order, CancellationToken cancellationToken)
         {
-            ServiceResponse<Order> response = new ServiceResponse<Order>();
-
             await _context.Orders.AddAsync(order, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 

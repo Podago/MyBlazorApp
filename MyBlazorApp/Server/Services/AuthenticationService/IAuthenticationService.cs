@@ -1,6 +1,4 @@
-﻿using MyBlazorApp.Shared.DTO;
-
-namespace MyBlazorApp.Server.Services.Authentication
+﻿namespace MyBlazorApp.Server.Services.Authentication
 {
     public interface IAuthenticationService
     {

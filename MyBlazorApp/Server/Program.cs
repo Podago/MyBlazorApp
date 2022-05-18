@@ -1,9 +1,3 @@
-global using MyBlazorApp.Shared;
-global using Microsoft.EntityFrameworkCore;
-global using MyBlazorApp.Server.Data;
-global using MyBlazorApp.Server.Services.OrderService;
-global using MyBlazorApp.Server.Services.OrderStatusService;
-using MyBlazorApp.Server.Services.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
