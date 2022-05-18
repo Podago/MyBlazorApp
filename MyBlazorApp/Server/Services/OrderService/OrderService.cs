@@ -25,7 +25,7 @@
 
         }
 
-        public async Task<OrderPage> GetOrdersByStatusPageAsync(string orderStatusUrl, int page, CancellationToken cancellationToken)
+        public async Task<OrderPage> GetOrdersByStatusPageAsync(string orderStatusUrl, int page, CancellationToken cancellationToken, float ordersOnPage = 3f)
         {
             var status = await _context.OrderStatuses
                 .AsNoTracking()
@@ -41,7 +41,6 @@
                 return null;
             }
 
-            var ordersOnPage = 2f;
             var pageCount = Math.Ceiling(await _context.Orders
                                                 .AsNoTracking()
                                                 .Include(o => o.Status)
@@ -70,14 +69,13 @@
             return orderPage;
         }
 
-        public async Task<OrderPage> GetOrdersByPageAsync(int page, CancellationToken cancellationToken)
+        public async Task<OrderPage> GetOrdersByPageAsync(int page, CancellationToken cancellationToken, float ordersOnPage = 3f)
         {
             if (page == 0)
             {
                 return null;
             }
 
-            var ordersOnPage = 2f;
             var pageCount = Math.Ceiling(await _context.Orders.AsNoTracking().CountAsync(cancellationToken) / ordersOnPage);
 
             var orders = await _context.Orders
